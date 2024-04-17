@@ -1,11 +1,9 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { render } from '@react-email/render';
 import * as bcrypt from 'bcrypt';
 
-import VerifyEmail from '../template/email';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
@@ -23,7 +21,6 @@ export class AuthService {
     const password = await bcrypt.hash(registerDto.password, 10);
     registerDto.password = password;
     const user = await this.usersService.create(registerDto);
-    await this.sendVerificationEmail(user);
     return {
       user,
       tokens: {
@@ -59,23 +56,6 @@ export class AuthService {
     return await this.usersService.findOne(userId);
   }
 
-  async requestEmailVerification(email: string) {
-    const user = await this.usersService.findOneByEmail(email);
-    if (!user) {
-      return new NotFoundException('User not found');
-    }
-    await this.sendVerificationEmail(user);
-    return { message: 'Email sent' };
-  }
-
-  async verifyEmail(token: string) {
-    const payload = this.jwtService.verify(token, {
-      secret: this.configService.get('jwt.access_token_secret'),
-    });
-    await this.usersService.update(payload.sub, { email_verified: true });
-    return { message: 'Email verified' };
-  }
-
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOneByEmail(email);
     if (user && (await bcrypt.compare(pass, user.password))) {
@@ -108,12 +88,5 @@ export class AuthService {
       html,
       context,
     });
-  }
-
-  async sendVerificationEmail(user: User) {
-    const token = this.generateAccessToken(user);
-    const url = `http://localhost:3000/auth/verify?token=${token}`;
-    const emailHtml = render(VerifyEmail({ url }));
-    await this.sendEmail(user.email, 'Verify your email', emailHtml, { url });
   }
 }

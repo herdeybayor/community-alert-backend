@@ -1,17 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
-  IsPhoneNumber,
   IsString,
   Matches,
   MinLength,
   Validate,
 } from 'class-validator';
 import { IsUnique } from '../../is-unique/is-unique';
-import { UserRole } from '../entities/user.entity';
 
 const passwordRegEx = {
   specialChar: /(?=.*[@$!%*?&])/,
@@ -77,19 +74,4 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   image: string;
-
-  @ApiProperty({
-    example: 'user',
-    description: 'The role of the user',
-  })
-  @IsEnum(UserRole, { message: 'Role must be either admin or user' })
-  @IsOptional()
-  role: UserRole;
-
-  @ApiProperty({
-    example: '08012345678',
-    description: 'The phone number of the user',
-  })
-  @IsPhoneNumber('NG', { message: 'Invalid phone number' })
-  tel: string;
 }

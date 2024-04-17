@@ -16,13 +16,11 @@ import {
 import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { RefreshDto } from './dto/refresh.dto';
 import { RegisterDto } from './dto/register.dto';
-import { RequestEmailDto } from './dto/request-email.dto';
 import { AccessTokenGuard } from './guards/access-token.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
-import { RefreshDto } from './dto/refresh.dto';
-import { VerifyEmailDto } from './dto/verify-email.dto';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -51,20 +49,6 @@ export class AuthController {
   @ApiBody({ type: RefreshDto })
   async refresh(@Request() req: Request & { user: User }) {
     return this.authService.refresh(req.user);
-  }
-
-  @Post('request-email-verification')
-  @ApiOperation({ summary: 'Request email verification' })
-  @ApiBody({ type: RequestEmailDto })
-  async requestEmailVerification(@Body() { email }: RequestEmailDto) {
-    return this.authService.requestEmailVerification(email);
-  }
-
-  @Post('verify-email')
-  @ApiOperation({ summary: 'Verify email' })
-  @ApiBody({ type: VerifyEmailDto })
-  async verifyEmail(@Body() { token }: { token: string }) {
-    return this.authService.verifyEmail(token);
   }
 
   @Get('profile')

@@ -49,32 +49,4 @@ export class User {
     description: 'The image of the user',
   })
   image: string;
-
-  @Column({ default: false })
-  @ApiProperty({
-    example: false,
-    description: 'The email verification status of the user',
-  })
-  email_verified: boolean;
-
-  @Column({ default: false })
-  @ApiProperty({
-    example: false,
-    description: 'The account disabled status of the user',
-  })
-  account_disabled: boolean;
-
-  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
-  @ApiProperty({
-    example: 'user',
-    description: 'The role of the user',
-  })
-  role: UserRole;
-
-  @Column({ length: 20 })
-  @ApiProperty({
-    example: '08012345678',
-    description: 'The phone number of the user',
-  })
-  tel: string;
 }
