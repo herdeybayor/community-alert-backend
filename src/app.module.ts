@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import configuration from './config/configuration';
 import { IsUnique } from './is-unique/is-unique';
 import { UsersModule } from './users/users.module';
+import { IncidentsModule } from './incidents/incidents.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     UsersModule,
+    IncidentsModule,
   ],
   providers: [IsUnique],
 })

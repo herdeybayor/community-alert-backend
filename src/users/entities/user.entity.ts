@@ -1,10 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
-}
+import { Incident } from '../../incidents/entities/incident.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -49,4 +52,22 @@ export class User {
     description: 'The image of the user',
   })
   image: string;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @ApiProperty({ example: '2023-12-18T10:25:12.000Z' })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+    onUpdate: 'CURRENT_TIMESTAMP(6)',
+  })
+  @ApiProperty({ example: '2023-12-18T10:25:12.000Z' })
+  updated_at: Date;
+
+  @OneToMany(() => Incident, (incident) => incident.user)
+  incidents: Incident[];
 }
